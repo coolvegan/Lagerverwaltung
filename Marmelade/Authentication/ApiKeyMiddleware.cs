@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Marmelade.Data;
 
-namespace Essensplan.Api
+namespace Marmelade.ApiKeyMiddleware
 {
     public class ApiKeyMiddleware
     {

@@ -4,6 +4,7 @@ using Marmelade.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marmelade.Data.Migrations
 {
     [DbContext(typeof(DatenbankContext))]
-    partial class DatenbankContextModelSnapshot : ModelSnapshot
+    [Migration("20231215180819_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 1,
                             AuthenticationSchluessel = "ChangeMe",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(7090),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7820),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(7090),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7820),
                             UpdatedBy = "Marco Kittel"
                         });
                 });
@@ -117,29 +120,15 @@ namespace Marmelade.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Beschreibung = "Frische Fruchtmarmelade",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6330),
+                            Beschreibung = "",
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7070),
                             CreatedBy = "Marco Kittel",
                             LagerortId = 1,
-                            Lagerzeitpunkt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6370),
+                            Lagerzeitpunkt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Menge = 500.0,
                             Mengenbezeichner = "Gramm",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6360),
-                            Name = "Melonen Marmelade",
-                            UpdatedBy = "Marco Kittel"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Beschreibung = "Frische Fruchtmarmelade",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6370),
-                            CreatedBy = "Marco Kittel",
-                            LagerortId = 5,
-                            Lagerzeitpunkt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6370),
-                            Menge = 750.0,
-                            Mengenbezeichner = "Gramm",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6370),
-                            Name = "Erdbeer Marmelade",
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7110),
+                            Name = "Marmelade",
                             UpdatedBy = "Marco Kittel"
                         });
                 });
@@ -186,9 +175,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 13,
                             Beschreibung = "Kühlschrank C",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7230),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7230),
                             Name = "C1",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -196,9 +185,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 14,
                             Beschreibung = "Kühlschrank C",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             Name = "C2",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -206,9 +195,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 15,
                             Beschreibung = "Kühlschrank C",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             Name = "C3",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -216,9 +205,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 16,
                             Beschreibung = "Kühlschrank C",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7240),
                             Name = "C4",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -226,9 +215,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 17,
                             Beschreibung = "Kühlschrank C",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7250),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6510),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7250),
                             Name = "C5",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -236,9 +225,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 1,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6450),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7180),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6450),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7180),
                             Name = "A1",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -246,9 +235,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 2,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7190),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7190),
                             Name = "A2",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -256,9 +245,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 3,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7190),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7190),
                             Name = "A3",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -266,9 +255,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 4,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7200),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6460),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7200),
                             Name = "A4",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -276,9 +265,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 5,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6470),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7200),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6470),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7200),
                             Name = "A5",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -286,9 +275,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 6,
                             Beschreibung = "Kühlschrank A",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6470),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7200),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6470),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7210),
                             Name = "A6",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -296,9 +285,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 7,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6470),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7210),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6480),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7210),
                             Name = "B1",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -306,9 +295,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 8,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6480),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7210),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6480),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             Name = "B2",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -316,9 +305,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 9,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6480),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6480),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             Name = "B3",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -326,9 +315,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 10,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6490),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6490),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             Name = "B4",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -336,9 +325,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 11,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6490),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7220),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6490),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7230),
                             Name = "B5",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -346,9 +335,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 12,
                             Beschreibung = "Kühlschrank B",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7230),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6500),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7230),
                             Name = "B6",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -356,9 +345,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 18,
                             Beschreibung = "Kühlschrank G",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6520),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7280),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6520),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7280),
                             Name = "G1",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -366,9 +355,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 19,
                             Beschreibung = "Kühlschrank G",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             Name = "G2",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -376,9 +365,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 20,
                             Beschreibung = "Garage",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             Name = "GA",
                             UpdatedBy = "Marco Kittel"
                         },
@@ -386,9 +375,9 @@ namespace Marmelade.Data.Migrations
                         {
                             Id = 21,
                             Beschreibung = "Keller",
-                            CreatedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            CreatedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             CreatedBy = "Marco Kittel",
-                            ModifiedAt = new DateTime(2023, 12, 15, 19, 51, 27, 377, DateTimeKind.Local).AddTicks(6530),
+                            ModifiedAt = new DateTime(2023, 12, 15, 19, 8, 19, 595, DateTimeKind.Local).AddTicks(7290),
                             Name = "KE",
                             UpdatedBy = "Marco Kittel"
                         });

@@ -9,6 +9,11 @@ public class Lagergegenstand : BaseEntity
     public int LagerortId { get; set; }
     public double Menge { get; set; }
     public DateTime Lagerzeitpunkt { get; set; }
+
+    public static implicit operator Lagergegenstand(List<Lagerort> v)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 
