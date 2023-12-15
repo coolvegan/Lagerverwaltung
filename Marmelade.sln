@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1706.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marmelade", "Marmelade\Marmelade.csproj", "{9FA568D7-2E9E-42D5-9E0F-30D264984876}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marmelade.Api", "Marmelade\Marmelade.Api.csproj", "{9FA568D7-2E9E-42D5-9E0F-30D264984876}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marmelade.Data", "Marmelade.Data\Marmelade.Data.csproj", "{4E3B12E5-DC89-4BEA-8764-683AF64A0CB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9FA568D7-2E9E-42D5-9E0F-30D264984876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FA568D7-2E9E-42D5-9E0F-30D264984876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FA568D7-2E9E-42D5-9E0F-30D264984876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E3B12E5-DC89-4BEA-8764-683AF64A0CB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E3B12E5-DC89-4BEA-8764-683AF64A0CB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E3B12E5-DC89-4BEA-8764-683AF64A0CB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E3B12E5-DC89-4BEA-8764-683AF64A0CB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
