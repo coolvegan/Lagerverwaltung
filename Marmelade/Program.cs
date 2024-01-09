@@ -22,6 +22,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 });
 
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Key Auth", Version = "v1" });
@@ -52,9 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
-
-
-
+app.UseCors("AllowOrigin");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -62,7 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<ApiKeyMiddleware>();
-
+//app.Urls.Add("http://0.0.0.0:4200");
 
 app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInhalte) =>
 {
@@ -116,12 +115,25 @@ app.MapDelete("/Lagerort/{id}", async (int id, DatenbankContext context) =>
 }).WithTags("Lagerort");
 
 
-app.MapGet("/Lagergegenstand", async (DatenbankContext context) =>
+app.MapGet("/Lagergegenstand", async (DatenbankContext context, string? nameStartsWith, string? nameHasSubstring, string? lagerOrt) =>
 {
-    var x = await context.Lagergegenstand.Include(x => x!.Lagerort).ToListAsync();
-    if (x == null) return Results.NotFound();
+    List<Lagergegenstand> lgs;
+    if (nameStartsWith?.Length >= 0)
+    {
+        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"{nameStartsWith}%")).Include(x => x!.Lagerort).ToListAsync();
+    } else if (nameHasSubstring?.Length >= 0){
+        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{nameHasSubstring}%")).Include(x => x!.Lagerort).ToListAsync();
+    } else if(lagerOrt?.Length >= 0)
+    {
+        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Lagerort.Name, $"%{lagerOrt}%")).Include(x => x!.Lagerort).ToListAsync();
+    }
+    else
+    {
+        lgs = await context.Lagergegenstand.Include(x => x!.Lagerort).ToListAsync();
+    }
+    if (lgs == null) return Results.NotFound();
     List<LagergegenstandDto> dtoList = new List<LagergegenstandDto>();
-    foreach (var item in x)
+    foreach (var item in lgs)
     {
         LagergegenstandDto dto = new LagergegenstandDto();
         dto = item;
