@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var corsAllowServer = builder.Configuration.GetValue<String>("CorsAllowServer");
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<DatenbankContext>(options =>
@@ -17,12 +17,6 @@ builder.Services.AddDbContext<DatenbankContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
-});
-
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Key Auth", Version = "v1" });
@@ -52,8 +46,22 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+
+
+builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
+    builder
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowAnyOrigin();
+}));
+
 var app = builder.Build();
-app.UseCors("AllowOrigin");
+app.UseCors(x => x
+      .AllowAnyOrigin()
+      .AllowAnyMethod()
+      .WithOrigins(corsAllowServer).AllowAnyHeader());
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -87,10 +95,10 @@ app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInha
 
 app.MapPost("/Lagerort", async (DatenbankContext context, LagerortCreateDto lagerortDto) =>
 {
-    var x = new Lagerort();
-    x.Beschreibung = lagerortDto.Beschreibung;
-    x.Name = lagerortDto.Name;
-    await context.AddAsync(x);
+    var lagerort = new Lagerort();
+    lagerort.Beschreibung = lagerortDto.Beschreibung;
+    lagerort.Name = lagerortDto.Name;
+    await context.AddAsync(lagerort);
     await context.SaveChangesAsync();
     return Results.Ok();
 }).WithTags("Lagerort");
