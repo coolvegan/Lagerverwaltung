@@ -14,7 +14,6 @@ namespace Marmelade.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Lagergegenstand>().HasOne(x => x.Lagerort).WithMany(y => y.Lagergegenstand).HasForeignKey(f => f.LagerortId).OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.ApplyConfiguration(new LagergegenstandConfiguration());
             modelBuilder.ApplyConfiguration(new LagerortConfiguration());

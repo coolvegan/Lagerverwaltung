@@ -5,6 +5,7 @@ namespace Marmelade.ApiKeyMiddleware
 {
     public class ApiKeyMiddleware
     {
+        private const string NO_API_KEY = "API Schlüssel fehlt.";
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
         private string _dbapi_key  = "";
@@ -27,7 +28,7 @@ namespace Marmelade.ApiKeyMiddleware
             if (!context.Request.Headers.TryGetValue("ApiKey", out var apikeyfromheader))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("API Schlüssel fehlt.");
+                await context.Response.WriteAsync(NO_API_KEY);
                 return;
             }
             var apikey = _configuration.GetValue<string>("ApiKey");
@@ -44,7 +45,7 @@ namespace Marmelade.ApiKeyMiddleware
             if (!apikey.Equals(apikeyfromheader))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("API Schlüssel fehlt.");
+                await context.Response.WriteAsync(NO_API_KEY);
                 return;
             }
             await _next(context);
