@@ -22,7 +22,7 @@ jobs:
         fetch-depth: 0
 
 
-    - name: AssetDatei Nicht gefunden
+    - name: Abhängigkeiten holen
       run: dotnet restore
     - name: Build app for release
-      run: msbuild Marmelade/Marmelade.Api.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      run: dotnet build Marmelade/Marmelade.Api.csproj -t:rebuild --configuration Release 
