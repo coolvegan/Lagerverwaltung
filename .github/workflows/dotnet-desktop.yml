@@ -33,7 +33,7 @@ jobs:
         host: ${{ secrets.SERVER }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.PRIVATEKEY }}
-        source: "Marmelade/bin/Release/net7.0/Marmelade.Api.dll"
+        source: "Marmelade/bin"
         target: "/home/${{ secrets.USER }}"
     - name: Auf den Server kopieren 2
       uses: appleboy/scp-action@master
