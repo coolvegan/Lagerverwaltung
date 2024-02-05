@@ -1,0 +1,34 @@
+name: .NET Core Desktop
+on:
+  workflow_dispatch
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: ubuntu-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: Marmelade.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.0
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+    
+    - name: Build app for release
+      run: msbuild src\Marmelade.Api.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
