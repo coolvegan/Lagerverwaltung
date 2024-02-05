@@ -26,3 +26,5 @@ jobs:
       run: dotnet restore
     - name: Build app for release
       run: dotnet build Marmelade/Marmelade.Api.csproj -t:rebuild --configuration Release 
+    - name: Copy to Server
+      run: scp -r Marmelade.Data/bin/Release
