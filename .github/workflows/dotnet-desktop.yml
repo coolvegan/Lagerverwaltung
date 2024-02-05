@@ -28,4 +28,4 @@ jobs:
         dotnet-version: 7.0.x
         
     - name: Build app for release
-      run: msbuild src\Marmelade.Api.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      run: msbuild Marmelade.Api.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
