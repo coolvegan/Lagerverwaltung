@@ -5,26 +5,33 @@ on:
 jobs:
 
   build:
-
     strategy:
       matrix:
         configuration: [Release]
 
-    runs-on: ubuntu-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
+    runs-on: ubuntu-latest
     env:
-      Solution_Name: Marmelade.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: Marmelade.sln  
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
-
     - name: Abhängigkeiten holen
       run: dotnet restore
     - name: Build app for release
       run: dotnet build Marmelade/Marmelade.Api.csproj -t:rebuild --configuration Release 
-    - name: Copy to Server
-      run: scp -r Marmelade.Data/bin/Release
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auf den Server kopieren
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SERVER }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.PRIVATEKEY }}
+        source: "bin/Release/"
+        target: "/home/${{ secrets.USER }}"
