@@ -1,14 +1,12 @@
 name: .NET Core Desktop
 on:
-  workflow_dispatch
+  [push,workflow_dispatch]
 
 jobs:
-
   build:
     strategy:
       matrix:
         configuration: [Release]
-
     runs-on: ubuntu-latest
     env:
       Solution_Name: Marmelade.sln  
@@ -17,7 +15,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-
     - name: Abhängigkeiten holen
       run: dotnet restore
     - name: Build app for release
@@ -30,6 +27,11 @@ jobs:
         key: ${{ secrets.PRIVATEKEY }}
         source: "Marmelade/bin/Release/net7.0"
         target: "/home/${{ secrets.USER }}"      
-
-
-   
+    - name: SSH Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.PRIVATEKEY }}
+        script: |
+          sudo systemctl restart marmelade.service
