@@ -17,7 +17,7 @@ namespace Marmelade.Api.Services
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.StartsWithSegments("/Login"))
+            if (context.Request.Path.StartsWithSegments("/api/Login")||(context.Request.Path.StartsWithSegments("/Login")))
             {
                 await _next(context);
                 return;
