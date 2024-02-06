@@ -93,12 +93,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//app.UseMiddleware<LoginMiddleWare>();
+app.UseMiddleware<LoginMiddleWare>();
 
 app.UseMiddleware<ApiKeyMiddleware>();
+app.UsePathBase(new PathString("/api"));
+app.UseRouting();
 
-
-//app.Urls.Add("http://0.0.0.0:4200");
+//app.Urls.Add("http://0.0.0.0:5218");
 
 app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInhalte) =>
 {
@@ -290,6 +291,8 @@ app.MapGet("/word", async (DatenbankContext context) =>
         }
     
         var month = item.Lagerzeitpunkt.Month.ToString();
+        var year = item.Lagerzeitpunkt.Year.ToString().Substring(2);
+
         if (month.Length == 1)
         {
             month = "0" + month;
@@ -299,7 +302,7 @@ app.MapGet("/word", async (DatenbankContext context) =>
         {
             day = "0" + day;
         }
-        valueList.Add(item.Menge + " " + item.Lagerort.Name + "\n" + day + "." + month);
+        valueList.Add(item.Menge + " " + item.Lagerort.Name + "\n" + month + "." + year);
     };
 
     var wb = new XLWorkbook();
