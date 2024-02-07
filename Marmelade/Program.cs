@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSingleton<ILoginService>(provider => new LoginService());
-
+builder.Services.AddScoped<IExcelGenerator>(provider => new ExcelGenerator());
 
 builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
     builder
@@ -266,68 +266,18 @@ app.MapPost("/Login", async (DatenbankContext context, User user, ILoginService 
 });
 
 
-app.MapGet("/Excel", async (DatenbankContext context) =>
+app.MapGet("/Excel", async (DatenbankContext context, IExcelGenerator excelGenerator) =>
 {
-    Dictionary<string, List<string>> keyValuePairs = new Dictionary<String, List<String>>();
     List<Lagergegenstand> lg = await context.Lagergegenstand.Include(x => x.Lagerort).OrderBy(y => y.Name).ToListAsync();
+    XLWorkbook wb = excelGenerator.Create(lg);
 
-    foreach(var item in lg)
-    {
-        List<string> valueList;
-        keyValuePairs.TryGetValue(item.Name.Trim(), out valueList);
-        if(valueList == null)
-        {
-            valueList = new List<String>();
-            keyValuePairs.Add(item.Name.Trim(), valueList);
-        }
-    
-        var month = item.Lagerzeitpunkt.Month.ToString();
-        var year = item.Lagerzeitpunkt.Year.ToString().Substring(2);
-
-        if (month.Length == 1)
-        {
-            month = "0" + month;
-        }
-        var day = item.Lagerzeitpunkt.Day.ToString();
-        if (day.Length == 1)
-        {
-            day = "0" + day;
-        }
-        valueList.Add(item.Menge + " " + item.Lagerort.Name + "\n" + month + "." + year);
-    };
-
-    var wb = new XLWorkbook();
-    var ws = wb.Worksheets.Add("Blatt1");
-    var row = 1;
-    ws.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-    var columnA = ws.Column(1);
-    columnA.Style.Font.Bold = true;
-    columnA.Style.Font.FontSize = 12;
-    columnA.Width = 30;
-    foreach (var item in keyValuePairs)
-    {
-        var key = item.Key;
-        var col = 1;
-        ws.Cell(row, 1).SetValue(key);
-        col++;
-        for(int i = 0; i < item.Value.Count; i++)
-        {
-            if (i % 6 == 0 && i !=0)
-            {
-                row++;
-                ws.Cell(row, 1).SetValue(key);
-            }
-            ws.Cell(row, (i%6)+2).SetValue(item.Value.ElementAt<string>(i));
-        }
-        row++;
-    }
     string result;
     using (MemoryStream memoryStream = new MemoryStream())
     {
         wb.SaveAs(memoryStream);
         result = Convert.ToBase64String(memoryStream.ToArray());
     }
-    return Results.Ok<Excel>(new Excel { Base64 = result});
+    return Results.Ok<Excel>(new Excel { Base64 = result });
 });
 
 app.MapGet("/Tokenpruefung", async (DatenbankContext context, string token, ILoginService loginService) =>
@@ -368,3 +318,4 @@ public class TokenHealth
 {
     public bool Result { get; set; }
 }
+
