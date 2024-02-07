@@ -46,7 +46,7 @@ namespace Marmelade.Api.Services
         {
             ValidityCheck();
         }
-        private long validityTimeframeInSeconds = 60*60;
+        private long validityTimeframeInSeconds = 60*45;
         private List<(string, DateTime, bool)> token = new List<(string, DateTime, bool)>();
 
         private byte[] ConcatenateArrays(params byte[][] arrays)

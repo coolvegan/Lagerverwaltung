@@ -100,7 +100,6 @@ app.UsePathBase(new PathString("/api"));
 app.UseRouting();
 
 //app.Urls.Add("http://0.0.0.0:5218");
-
 app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInhalte) =>
 {
     List<Lagerort> x;
@@ -246,15 +245,6 @@ app.MapDelete("/Lagergegenstand/{id}", async (int id, DatenbankContext context) 
     return Results.Ok();
 }).WithTags("Lagergegenstand");
 
-app.MapPost("/upload", async (IFormFile file) =>
-{
-    // Your logic for processing the file goes here
-    string tempfile = CreateTempfilePath();
-    using var stream = File.OpenWrite(tempfile);
-    await file.CopyToAsync(stream);
-
-    // Do more fancy stuff with the IFormFile
-}).WithMetadata(new Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute());
 
 static string CreateTempfilePath()
 {
@@ -275,7 +265,8 @@ app.MapPost("/Login", async (DatenbankContext context, User user, ILoginService 
     return Results.Unauthorized();
 });
 
-app.MapGet("/word", async (DatenbankContext context) =>
+
+app.MapGet("/Excel", async (DatenbankContext context) =>
 {
     Dictionary<string, List<string>> keyValuePairs = new Dictionary<String, List<String>>();
     List<Lagergegenstand> lg = await context.Lagergegenstand.Include(x => x.Lagerort).OrderBy(y => y.Name).ToListAsync();
@@ -339,16 +330,41 @@ app.MapGet("/word", async (DatenbankContext context) =>
     return Results.Ok<Excel>(new Excel { Base64 = result});
 });
 
+app.MapGet("/Tokenpruefung", async (DatenbankContext context, string token, ILoginService loginService) =>
+{
+    if (loginService.IsTokenValid(token))
+    {
+    Results.Ok(new TokenHealth { Result = true});
+    }
+    Results.NotFound(new TokenHealth { Result = false});
+});
+
+app.MapGet("/Alive", async () =>
+{
+    return Results.Ok();
+});
+
+
 
 app.Run();
 
 public class User
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public required string Username { get; set; }
+    public required string Password { get; set; }
 }
 
 public class Excel
 {
-    public string Base64 { get; set; }
+    public required string Base64 { get; set; }
+}
+
+public class Token
+{
+    public required string Data { get; set; }
+}
+
+public class TokenHealth
+{
+    public bool Result { get; set; }
 }
