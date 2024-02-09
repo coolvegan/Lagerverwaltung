@@ -57,23 +57,30 @@ public class LagergegenstandDto
 
     public static implicit operator LagergegenstandDto(Lagergegenstand lagergegenstand)
     {
-        var month = lagergegenstand.Lagerzeitpunkt.Month.ToString();
-        var year = lagergegenstand.Lagerzeitpunkt.Year.ToString().Substring(2,2);
-        if(month.Length == 1)
-        {
-            month = "0" + month;
-        }
         LagergegenstandDto dto = new LagergegenstandDto();
-        dto.Id = lagergegenstand.Id;
-        dto.Beschreibung = lagergegenstand.Beschreibung;
-        dto.Name = lagergegenstand.Name;
-        dto.LagerortId = lagergegenstand.Lagerort.Id;
-        dto.Lagerort = lagergegenstand.Lagerort.Name;
-        dto.Lagerzeitpunkt = lagergegenstand.Lagerzeitpunkt;
-        dto.Menge = lagergegenstand.Menge;
-        dto.Mengenbezeichner = lagergegenstand.Mengenbezeichner;
-        dto.Lagerzeitpunktcode = month +"."+ year;
-        dto.Lagerortmengencode = lagergegenstand.Menge + " " + lagergegenstand.Lagerort.Name;
+        try
+        {
+            var month = lagergegenstand.Lagerzeitpunkt.Month.ToString();
+            var year = lagergegenstand.Lagerzeitpunkt.Year.ToString().Substring(2, 2);
+            if (month.Length == 1)
+            {
+                month = "0" + month;
+            }
+
+            dto.Id = lagergegenstand.Id;
+            dto.Beschreibung = lagergegenstand.Beschreibung;
+            dto.Name = lagergegenstand.Name;
+            dto.LagerortId = lagergegenstand.Lagerort.Id;
+            dto.Lagerort = lagergegenstand.Lagerort.Name;
+            dto.Lagerzeitpunkt = lagergegenstand.Lagerzeitpunkt;
+            dto.Menge = lagergegenstand.Menge;
+            dto.Mengenbezeichner = lagergegenstand.Mengenbezeichner;
+            dto.Lagerzeitpunktcode = month + "." + year;
+            dto.Lagerortmengencode = lagergegenstand.Menge + " " + lagergegenstand.Lagerort.Name;
+        }catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
         return dto;
     }
 }

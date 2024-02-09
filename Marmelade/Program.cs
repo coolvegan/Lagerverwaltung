@@ -1,6 +1,7 @@
 ﻿
 using System.Text.Json.Serialization;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Marmelade.Api.Services;
 using Marmelade.ApiKeyMiddleware;
@@ -93,7 +94,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<LoginMiddleWare>();
+//app.UseMiddleware<LoginMiddleWare>();
 
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UsePathBase(new PathString("/api"));
@@ -294,9 +295,16 @@ app.MapGet("/Alive", async () =>
     return Results.Ok();
 });
 
+app.MapGet("Excel/Import", async  (DatenbankContext context) =>
+{
+    ExcelImport excelImport = new ExcelImport(context);
+    excelImport.Start();
+    
+});
 
 
 app.Run();
+
 
 public class User
 {
@@ -318,4 +326,3 @@ public class TokenHealth
 {
     public bool Result { get; set; }
 }
-
