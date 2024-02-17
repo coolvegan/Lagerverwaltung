@@ -5,6 +5,7 @@ namespace Marmelade.Data
 {
     internal class LagerortConfiguration : IEntityTypeConfiguration<Lagerort>
     {
+
         List<Lagerort> kuehlschrankA = new List<Lagerort>();
         List<Lagerort> kuehlschrankB = new List<Lagerort>();
         List<Lagerort> kuehlschrankC = new List<Lagerort>();
@@ -16,7 +17,8 @@ namespace Marmelade.Data
                 {
                     Id = i,
                     Beschreibung = "Kühlschrank A",
-                    Name = "A" + i.ToString()
+                    Name = "A" + i.ToString(),
+                    BenutzerId = 2,
 
                 };
                 kuehlschrankA.Add(ort);
@@ -28,6 +30,7 @@ namespace Marmelade.Data
                     Id = (i + 6),
                     Beschreibung = "Kühlschrank B",
                     Name = "B" + i.ToString(),
+                    BenutzerId = 2,
                 };
                 kuehlschrankB.Add(ort);
             }//bis id 12
@@ -37,7 +40,8 @@ namespace Marmelade.Data
                 {
                     Id = (i + 12),
                     Beschreibung = "Kühlschrank C",
-                    Name = "C" + i.ToString()
+                    Name = "C" + i.ToString(),
+                    BenutzerId = 2,
 
                 };
                 kuehlschrankC.Add(ort);
@@ -49,24 +53,28 @@ namespace Marmelade.Data
                 Id = 18,
                 Name = "G1",
                 Beschreibung = "Kühlschrank G",
+                BenutzerId = 2,
             });
             kuehlschrankC.Add(new Lagerort
             {
                 Id = 19,
                 Name = "G2",
                 Beschreibung = "Kühlschrank G",
+                BenutzerId = 2,
             });
             kuehlschrankC.Add(new Lagerort
             {
                 Id = 20,
                 Name = "GA",
                 Beschreibung = "Garage",
+                BenutzerId = 2,
             });
             kuehlschrankC.Add(new Lagerort
             {
                 Id = 21,
                 Name = "KE",
                 Beschreibung = "Keller",
+                BenutzerId = 2,
             });
 
         }
@@ -74,7 +82,7 @@ namespace Marmelade.Data
         public void Configure(EntityTypeBuilder<Lagerort> builder)
         {
 
-            builder.HasIndex(p => p.Name).IsUnique();
+            builder.HasIndex(p => new { p.Name, p.BenutzerId }).IsUnique();
  
             builder.HasData(
                 kuehlschrankC

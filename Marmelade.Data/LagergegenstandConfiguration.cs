@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Marmelade.Data
 {
+    
     internal class LagergegenstandConfiguration : IEntityTypeConfiguration<Lagergegenstand>
     {
         public void Configure(EntityTypeBuilder<Lagergegenstand> builder)
         {
-
+        
             builder.HasData(
                 new Lagergegenstand
                 {
@@ -17,7 +18,9 @@ namespace Marmelade.Data
                     Mengenbezeichner = "Gramm",
                     Menge = 500,
                     Lagerzeitpunkt = DateTime.Now,
-                    Beschreibung = "Frische Fruchtmarmelade"
+                    Beschreibung = "Frische Fruchtmarmelade",
+
+                    BenutzerId = 2
                 },
                 new Lagergegenstand
                 {
@@ -27,9 +30,13 @@ namespace Marmelade.Data
                     Mengenbezeichner = "Gramm",
                     Menge = 750,
                     Lagerzeitpunkt = DateTime.Now,
-                    Beschreibung = "Frische Fruchtmarmelade"
+                    Beschreibung = "Frische Fruchtmarmelade",
+  
+                    BenutzerId = 2
+
                 }
             );
+           
         }
     }
 }
