@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Marmelade.Data;
 
 using String = System.String;
@@ -7,24 +8,26 @@ using String = System.String;
 public class ExcelImport
 {
     DatenbankContext Datenbank { get; set; }
-    public ExcelImport(DatenbankContext datenbankContext)
+    int UserId { get; set; }
+    public ExcelImport(DatenbankContext datenbankContext,int userId)
     {
         Datenbank = datenbankContext;
+        UserId = userId;
     }
     
-    public async void OrteInDieDatenbank(HashSet<string> orte)
+    public void OrteInDieDatenbank(HashSet<string> orte)
     {
         foreach (var ort in orte)
         {
-            Lagerort lagerort = new Lagerort { Name = ort, Beschreibung = "" };
-            var dbort = Datenbank.Lagerorte.Where(id => id.Name == ort).ToList();
+            Lagerort lagerort = new Lagerort { Name = ort, Beschreibung = "", BenutzerId = UserId };
+            var dbort = Datenbank.Lagerorte.Where(id => id.Name == ort).Where(b => b.BenutzerId == UserId).ToList();
             if (dbort.Count >0)
             {
                 continue;
             }
-            await Datenbank.AddAsync(lagerort);
+            Datenbank.Add(lagerort);
         }
-        await Datenbank.SaveChangesAsync();
+        Datenbank.SaveChanges();
     }
 
     public void Start()
@@ -44,11 +47,11 @@ public class ExcelImport
         }
     }
 
-    private async void LagergegenstandZuDatenbank(List<Lagergegenstand> liste)
+    private void LagergegenstandZuDatenbank(List<Lagergegenstand> liste)
     {
         foreach(var gegenstand in liste)
         {
-            await Datenbank.AddAsync<Lagergegenstand>(gegenstand);
+            Datenbank.Add<Lagergegenstand>(gegenstand);
         }
         Datenbank.SaveChanges();
     }
@@ -75,10 +78,11 @@ public class ExcelImport
                         lagergegenstand = cell.Value.ToString().Trim();
                         continue;
                     }
-                    var gewicht = cell.Value.ToString().Split(" ").ElementAt(0).Trim();
-                    var lagerOrt = cell.Value.ToString().Split(" ").ElementAt(1).Trim();
-                    var monat = cell.Value.ToString().Split(" ").ElementAt(2).Split(".").ElementAt(0).Trim();
-                    var jahr = cell.Value.ToString().Split(" ").ElementAt(2).Split(".").ElementAt(1).Trim();
+                    var zellenwertOhneZeilenUmbruch=cell.Value.ToString().Replace("\n"," ").Trim();
+                    var gewicht = zellenwertOhneZeilenUmbruch.Split(" ").ElementAt(0).Trim();
+                    var lagerOrt = zellenwertOhneZeilenUmbruch.Split(" ").ElementAt(1).Trim();
+                    var monat = zellenwertOhneZeilenUmbruch.Split(" ").ElementAt(2).Split(".").ElementAt(0).Trim();
+                    var jahr = zellenwertOhneZeilenUmbruch.Split(" ").ElementAt(2).Split(".").ElementAt(1).Trim();
                     double gewicht_double;
 
                     Double.TryParse(gewicht, out gewicht_double);
@@ -114,7 +118,9 @@ public class ExcelImport
                         Mengenbezeichner = "Gramm",
                         UpdatedBy = "Import",
                         Lagerzeitpunkt = date,
-                        LagerortId = ort.Id
+                        LagerortId = ort.Id,
+                        BenutzerId = UserId
+                        
                     };
                     importListe.Add(neu);
                 }
@@ -138,8 +144,21 @@ public class ExcelImport
                 {
                     continue;
                 }
-                var lagerOrt = cell.Value.ToString().Split(" ").ElementAt(1);
-                lagerOrte.Add(lagerOrt);
+                try
+                {
+                    var lagerOrt = cell.Value.ToString();
+                    if (cell.Value.ToString().Contains("\n")){
+                        lagerOrt = lagerOrt.Replace("\n", " ");
+                    }
+
+                    lagerOrt = lagerOrt.Split(" ").ElementAt(1);
+                    lagerOrte.Add(lagerOrt);
+                }
+                catch(Exception)
+                {
+          
+                }
+  
             }
         }
         return lagerOrte;

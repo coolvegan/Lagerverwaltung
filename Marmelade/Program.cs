@@ -20,7 +20,8 @@ builder.Services.AddDbContext<DatenbankContext>(options =>
     options.UseSqlServer(conn);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -80,6 +81,9 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
     .AllowAnyHeader()
     .AllowAnyOrigin();
 }));
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 app.UseCors(x => x
@@ -94,22 +98,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//app.UseMiddleware<LoginMiddleWare>();
+app.UseSession();
 
+app.UseMiddleware<LoginMiddleWare>();
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UsePathBase(new PathString("/api"));
 app.UseRouting();
 
 //app.Urls.Add("http://0.0.0.0:5218");
-app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInhalte) =>
+app.MapGet("/Lagerort", async (HttpContext ctx, DatenbankContext context, bool? zeigeLagerortInhalte) =>
 {
     List<Lagerort> x;
+    var username = ctx.Session.GetString("Username");
     if (zeigeLagerortInhalte.HasValue && zeigeLagerortInhalte.Value == true)
     {
-        x = await context.Lagerorte.Include(x => x!.Lagergegenstand).ToListAsync();
+        x = await context.Lagerorte.Include(x => x!.Lagergegenstand).Where(b => b.Benutzer!.Name == username).ToListAsync();
     } else
     {
-        x = await context.Lagerorte.ToListAsync();
+        x = await context.Lagerorte.Where(b => b.Benutzer!.Name == username).ToListAsync();
     }
 
     if (x == null) return Results.NotFound();
@@ -123,11 +129,18 @@ app.MapGet("/Lagerort", async (DatenbankContext context, bool? zeigeLagerortInha
     return Results.Ok(dtoList);
 }).WithTags("Lagerort");
 
-app.MapPost("/Lagerort", async (DatenbankContext context, LagerortCreateDto lagerortDto) =>
+app.MapPost("/Lagerort", async (HttpContext ctx, DatenbankContext context, LagerortCreateDto lagerortDto) =>
 {
+    var username = ctx.Session.GetString("Username");
+    var dbUser = await context.Benutzer.Where(b => b.Name == username).FirstAsync();
+    if(dbUser == null)
+    {
+        return Results.Forbid();
+    }
     var lagerort = new Lagerort();
     lagerort.Beschreibung = lagerortDto.Beschreibung;
     lagerort.Name = lagerortDto.Name;
+    lagerort.BenutzerId = dbUser.Id;
     await context.AddAsync(lagerort);
     await context.SaveChangesAsync();
     return Results.Ok();
@@ -153,12 +166,13 @@ app.MapDelete("/Lagerort/{id}", async (int id, DatenbankContext context) =>
 }).WithTags("Lagerort");
 
 
-app.MapGet("/Lagergegenstand", async (DatenbankContext context, string? nameStartsWith, string? nameHasSubstring, string? lagerOrt) =>
+app.MapGet("/Lagergegenstand", async (HttpContext ctx, DatenbankContext context, string? nameStartsWith, string? nameHasSubstring, string? lagerOrt) =>
 {
+    var username = ctx.Session.GetString("Username");
     List<Lagergegenstand> lgs = null;
     if (nameStartsWith?.Length >= 0)
     {
-        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"{nameStartsWith}%")).Include(x => x!.Lagerort).ToListAsync();
+        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"{nameStartsWith}%")).Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
     } else if (nameHasSubstring?.Length >= 0)
     {
         if (nameHasSubstring.Contains(">"))
@@ -169,7 +183,7 @@ app.MapGet("/Lagergegenstand", async (DatenbankContext context, string? nameStar
             bool istZahl = int.TryParse(endString, out int result);
             if (istZahl)
             {
-                lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{anString}%")).Where(v => v.Menge > result).Include(x => x!.Lagerort).ToListAsync();
+                lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{anString}%")).Where(v => v.Menge > result).Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
             }
 
         } else if (nameHasSubstring.Contains("<"))
@@ -180,20 +194,19 @@ app.MapGet("/Lagergegenstand", async (DatenbankContext context, string? nameStar
             bool istZahl = int.TryParse(endString, out int result);
             if (istZahl)
             {
-                lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{anString}%")).Where(v => v.Menge < result).Include(x => x!.Lagerort).ToListAsync();
+                lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{anString}%")).Where(v => v.Menge < result).Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
             }
         }
-
         else
         {
-            lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{nameHasSubstring}%")).Where(v => v.Menge > 50).Include(x => x!.Lagerort).ToListAsync();
+            lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Name, $"%{nameHasSubstring}%")).Where(v => v.Menge > 50).Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
         }
     } else if(lagerOrt?.Length >= 0){
-        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Lagerort.Name, $"%{lagerOrt}%")).Include(x => x!.Lagerort).ToListAsync();
+        lgs = await context.Lagergegenstand.Where(v => EF.Functions.Like(v.Lagerort.Name, $"%{lagerOrt}%")).Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
     }
     else
     {
-        lgs = await context.Lagergegenstand.Include(x => x!.Lagerort).ToListAsync();
+        lgs = await context.Lagergegenstand.Include(x => x!.Lagerort).Where(b => b.Benutzer!.Name == username).ToListAsync();
     }
 
     if (lgs == null) return Results.NotFound();
@@ -208,8 +221,14 @@ app.MapGet("/Lagergegenstand", async (DatenbankContext context, string? nameStar
     return Results.Ok(dtoList);
 }).WithTags("Lagergegenstand");
 
-app.MapPost("/Lagergegenstand", async (DatenbankContext context, LagergegenstandCreateDto lagergegenstandDto) =>
+app.MapPost("/Lagergegenstand", async (HttpContext ctx, DatenbankContext context, LagergegenstandCreateDto lagergegenstandDto) =>
 {
+    var username = ctx.Session.GetString("Username");
+    var dbUser = await context.Benutzer.Where(b => b.Name == username).FirstAsync();
+    if (dbUser == null)
+    {
+        return Results.Forbid();
+    }
     var x = new Lagergegenstand();
     x.LagerortId = lagergegenstandDto.LagerortId;
     x.Beschreibung = lagergegenstandDto.Beschreibung;
@@ -217,6 +236,7 @@ app.MapPost("/Lagergegenstand", async (DatenbankContext context, Lagergegenstand
     x.Menge = lagergegenstandDto.Menge;
     x.Mengenbezeichner = lagergegenstandDto.Mengenbezeichner;
     x.Name = lagergegenstandDto.Name;
+    x.BenutzerId = dbUser.Id;
     await context.AddAsync(x);
     await context.SaveChangesAsync();
     return Results.Ok();
@@ -258,18 +278,23 @@ static string CreateTempfilePath()
 
 app.MapPost("/Login", async (DatenbankContext context, User user, ILoginService cSRF) =>
 {
-    if (user.Username == "paul" && user.Password == "11dänemark")
+    var userList = await context.Benutzer.Where(b => b.Name == user.Username).ToListAsync();
+    if(userList.Count == 0)
     {
-        return Results.Ok(cSRF.GenerateAndRegisterCsrfToken());
+        return Results.Unauthorized();
     }
-
+    if (userList.First().Password == Benutzer.GetPassword(user.Password))
+    {
+        return Results.Ok(cSRF.GenerateAndRegisterCsrfToken(user.Username));
+    }
     return Results.Unauthorized();
 });
 
 
-app.MapGet("/Excel", async (DatenbankContext context, IExcelGenerator excelGenerator) =>
+app.MapGet("/Excel", async (HttpContext ctx, DatenbankContext context, IExcelGenerator excelGenerator) =>
 {
-    List<Lagergegenstand> lg = await context.Lagergegenstand.Include(x => x.Lagerort).OrderBy(y => y.Name).ToListAsync();
+    var username = ctx.Session.GetString("Username");
+    List<Lagergegenstand> lg = await context.Lagergegenstand.Include(x => x.Lagerort).Where(b => b.Benutzer!.Name == username).OrderBy(y => y.Name).ToListAsync();
     XLWorkbook wb = excelGenerator.Create(lg);
 
     string result;
@@ -295,11 +320,25 @@ app.MapGet("/Alive", async () =>
     return Results.Ok();
 });
 
-app.MapGet("Excel/Import", async  (DatenbankContext context) =>
+app.MapGet("Excel/Import", async(HttpContext ctx, DatenbankContext context) =>
 {
-    ExcelImport excelImport = new ExcelImport(context);
-    excelImport.Start();
-    
+    var username = ctx.Session.GetString("Username");
+    var dbUser = await context.Benutzer.Where(b => b.Name == username).FirstAsync();
+    if (dbUser == null)
+    {
+        return Results.Forbid();
+    }
+    try
+    {
+        ExcelImport excelImport = new ExcelImport(context, dbUser.Id);
+        excelImport.Start();
+    }
+    catch(Exception e)
+    {
+        return Results.Problem(e.ToString());
+    }
+
+    return Results.Ok();
 });
 
 
